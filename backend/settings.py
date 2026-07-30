@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-00d)h1g4usy5@%_hb6yn_ol&043-vr23%n+xhzjq&d49^m4z)-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSALLOWED_HOSTS = ['tendersphere-backend.onrender.com', '127.0.0.1', 'localhost']TS = []
+ALLOWED_HOSTS = ['tendersphere-backend.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
