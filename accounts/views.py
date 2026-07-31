@@ -83,3 +83,26 @@ def reset_password(request):
     user.set_password(new_password)
     user.save()
     return Response({"message": "Password reset successfully."})
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+@api_view(['GET'])
+def get_profile(request):
+    auth = JWTAuthentication()
+    try:
+        user, token = auth.authenticate(request)
+    except Exception:
+        return Response({"error": "Invalid or missing token"}, status=401)
+
+    if user is None:
+        return Response({"error": "Invalid or missing token"}, status=401)
+
+    profile = user.profile
+    return Response({
+        "username": user.username,
+        "email": user.email,
+        "phone": profile.phone,
+        "state": profile.get_state_display(),
+        "tender_interests": profile.tender_interests,
+    })
