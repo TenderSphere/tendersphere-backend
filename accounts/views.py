@@ -30,7 +30,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.core.mail import send_mail
+import requests
 from django.conf import settings
 
 @api_view(['POST'])
@@ -48,11 +48,18 @@ def forgot_password(request):
 
     reset_link = f"{settings.FRONTEND_URL}/reset-password.html?uid={uid}&token={token}"
 
-    send_mail(
-        subject="Reset your TenderSphere password",
-        message=f"Click this link to reset your password: {reset_link}\n\nIf you didn't request this, ignore this email.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[email],
+    requests.post(
+        "https://api.brevo.com/v3/smtp/email",
+        headers={
+            "api-key": settings.BREVO_API_KEY,
+            "Content-Type": "application/json",
+        },
+        json={
+            "sender": {"email": settings.DEFAULT_FROM_EMAIL},
+            "to": [{"email": email}],
+            "subject": "Reset your TenderSphere password",
+            "htmlContent": f"<p>Click this link to reset your password:</p><p><a href='{reset_link}'>{reset_link}</a></p><p>If you didn't request this, ignore this email.</p>",
+        },
     )
     return Response({"message": "If that email is registered, a reset link has been sent."})
 
