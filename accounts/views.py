@@ -106,3 +106,35 @@ def get_profile(request):
         "state": profile.get_state_display(),
         "tender_interests": profile.tender_interests,
     })
+
+
+from rest_framework.permissions import IsAdminUser
+from .models import Tender
+
+@api_view(['POST'])
+def add_tender(request):
+    auth = JWTAuthentication()
+    try:
+        user, token = auth.authenticate(request)
+    except Exception:
+        return Response({"error": "Invalid or missing token"}, status=401)
+
+    if user is None or not user.is_staff:
+        return Response({"error": "Admin access required"}, status=403)
+
+    data = request.data
+    try:
+        tender = Tender.objects.create(
+            title=data.get('title'),
+            description=data.get('description'),
+            department=data.get('department'),
+            category=data.get('category'),
+            state=data.get('state'),
+            tender_value=data.get('tender_value', ''),
+            deadline=data.get('deadline'),
+            reference_number=data.get('reference_number'),
+            document_link=data.get('document_link', ''),
+        )
+        return Response({"message": "Tender added successfully", "id": tender.id}, status=201)
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)

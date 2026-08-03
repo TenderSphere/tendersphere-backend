@@ -21,3 +21,38 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+
+class Tender(models.Model):
+    CATEGORY_CHOICES = [
+        ('Construction', 'Construction'),
+        ('IT & Software', 'IT & Software'),
+        ('Healthcare', 'Healthcare'),
+        ('Defence', 'Defence'),
+        ('Education', 'Education'),
+        ('Transport', 'Transport'),
+        ('Energy', 'Energy'),
+        ('Agriculture', 'Agriculture'),
+        ('Insurance & Financial Services', 'Insurance & Financial Services'),
+        ('Consultancy & Professional Services', 'Consultancy & Professional Services'),
+        ('Manufacturing & Supply', 'Manufacturing & Supply'),
+        ('Facility Management', 'Facility Management'),
+        ('Telecommunications', 'Telecommunications'),
+        ('Water & Sanitation', 'Water & Sanitation'),
+        ('Legal & Compliance', 'Legal & Compliance'),
+        ('Miscellaneous', 'Miscellaneous'),
+    ]
+
+    title = models.CharField(max_length=300)
+    description = models.TextField()
+    department = models.CharField(max_length=200)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    state = models.CharField(max_length=2, choices=UserProfile.STATE_CHOICES)
+    tender_value = models.CharField(max_length=100, blank=True)
+    deadline = models.DateField()
+    reference_number = models.CharField(max_length=100, unique=True)
+    document_link = models.URLField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
