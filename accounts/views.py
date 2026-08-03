@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer
+from .models import UserProfile, Tender
 
 @api_view(['POST'])
 def register(request):
@@ -98,14 +99,23 @@ def get_profile(request):
     if user is None:
         return Response({"error": "Invalid or missing token"}, status=401)
 
-    profile = user.profile
-    return Response({
-        "username": user.username,
-        "email": user.email,
-        "phone": profile.phone,
-        "state": profile.get_state_display(),
-        "tender_interests": profile.tender_interests,
-    })
+    try:
+        profile = user.profile
+        return Response({
+            "username": user.username,
+            "email": user.email,
+            "phone": profile.phone,
+            "state": profile.get_state_display(),
+            "tender_interests": profile.tender_interests,
+        })
+    except UserProfile.DoesNotExist:
+        return Response({
+            "username": user.username,
+            "email": user.email,
+            "phone": "Not set",
+            "state": "Not set",
+            "tender_interests": "",
+        })
 
 
 from rest_framework.permissions import IsAdminUser
