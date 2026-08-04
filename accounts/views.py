@@ -143,3 +143,36 @@ def add_tender_public(request):
         return Response({"message": "Tender added successfully", "id": tender.id}, status=201)
     except Exception as e:
         return Response({"error": str(e)}, status=400)
+
+    @api_view(['GET'])
+def list_tenders(request):
+    auth = JWTAuthentication()
+    is_logged_in = False
+    try:
+        user, token = auth.authenticate(request)
+        if user is not None:
+            is_logged_in = True
+    except Exception:
+        is_logged_in = False
+
+    tenders = Tender.objects.all().order_by('-created_at')
+    results = []
+    for t in tenders:
+        item = {
+            "id": t.id,
+            "title": t.title,
+            "category": t.category,
+            "state": t.get_state_display(),
+            "department": t.department,
+            "deadline": t.deadline,
+        }
+        if is_logged_in:
+            item["description"] = t.description
+            item["tender_value"] = t.tender_value
+            item["reference_number"] = t.reference_number
+            item["document_link"] = t.document_link
+        else:
+            item["description"] = t.description[:100] + "..." if len(t.description) > 100 else t.description
+        results.append(item)
+
+    return Response({"tenders": results, "is_logged_in": is_logged_in})
