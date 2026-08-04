@@ -122,15 +122,10 @@ from rest_framework.permissions import IsAdminUser
 from .models import Tender
 
 @api_view(['POST'])
-def add_tender(request):
-    auth = JWTAuthentication()
-    try:
-        user, token = auth.authenticate(request)
-    except Exception:
-        return Response({"error": "Invalid or missing token"}, status=401)
-
-    if user is None or not user.is_staff:
-        return Response({"error": "Admin access required"}, status=403)
+def add_tender_public(request):
+    passcode = request.data.get('passcode')
+    if passcode != settings.CONTRIBUTOR_PASSCODE:
+        return Response({"error": "Incorrect passcode"}, status=403)
 
     data = request.data
     try:

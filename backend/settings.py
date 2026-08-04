@@ -137,3 +137,4 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = "tendersphere.alerts@gmail.com"
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://tendersphere.github.io')
 BREVO_API_KEY = os.environ.get('BREVO_API_KEY')
+CONTRIBUTOR_PASSCODE = os.environ.get('CONTRIBUTOR_PASSCODE', 'changeme123')
