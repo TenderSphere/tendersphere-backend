@@ -144,7 +144,7 @@ def add_tender_public(request):
     except Exception as e:
         return Response({"error": str(e)}, status=400)
 
-    @api_view(['GET'])
+@api_view(['GET'])
 def list_tenders(request):
     auth = JWTAuthentication()
     is_logged_in = False
