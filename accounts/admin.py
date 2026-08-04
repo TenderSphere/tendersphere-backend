@@ -8,6 +8,6 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Tender)
 class TenderAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'state', 'deadline', 'reference_number')
+    list_display = ('title', 'category', 'state', 'deadline', 'reference_number', 'portal_tender_id')
     list_filter = ('category', 'state')
-    search_fields = ('title', 'department', 'reference_number')
+    search_fields = ('title', 'department', 'reference_number', 'portal_tender_id')

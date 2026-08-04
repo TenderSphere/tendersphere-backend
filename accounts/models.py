@@ -53,6 +53,9 @@ class Tender(models.Model):
     reference_number = models.CharField(max_length=100, unique=True)
     document_link = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    document_link = models.URLField(blank=True)
+    portal_tender_id = models.CharField(max_length=100, blank=True, help_text="Admin-only: original portal's Tender ID for re-searching later")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
