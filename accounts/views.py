@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer
 from .models import UserProfile, Tender
+from datetime import date
 
 @api_view(['POST'])
 def register(request):
@@ -155,7 +156,7 @@ def list_tenders(request):
     except Exception:
         is_logged_in = False
 
-    tenders = Tender.objects.all().order_by('-created_at')
+    tenders = Tender.objects.filter(deadline__gte=date.today()).order_by('-created_at')
     results = []
     for t in tenders:
         item = {
